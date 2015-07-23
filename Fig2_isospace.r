@@ -1,5 +1,5 @@
 # Mantis shrimp
-# Figure 1
+# Figure 2
 # Isospace plot
 # 4.16.15
 
@@ -26,7 +26,7 @@ source("plot_data_opencirc.r")
 mix <- load_mix_data(filename="mantis_consumer_coral.csv", iso_names=c("d13C","d15N"), random_effects=NULL, cont_effects=NULL, fixed_effects=NULL)
 source <- load_source_data(filename="mantis_source_coral.csv", source_factors=NULL, conc_dep=FALSE, data_type="means", mix)    
 discr <- load_discr_data(filename="mantis_discrimination.csv", mix)
-plot_data_opencirc(filename="Fig1a_isospace_coral", plot_save_pdf=TRUE, plot_save_png=FALSE, mix,source,discr)
+plot_data_opencirc(filename="Fig2a_isospace_coral", plot_save_pdf=TRUE, plot_save_png=FALSE, mix,source,discr)
 
 # -----------------------------------------------------
 # Seagrass isospace
@@ -34,5 +34,5 @@ plot_data_opencirc(filename="Fig1a_isospace_coral", plot_save_pdf=TRUE, plot_sav
 mix <- load_mix_data(filename="mantis_consumer_seagrass.csv", iso_names=c("d13C","d15N"), random_effects=NULL, cont_effects=NULL, fixed_effects=NULL)
 source <- load_source_data(filename="mantis_source_seagrass.csv", source_factors=NULL, conc_dep=FALSE, data_type="means", mix)    
 discr <- load_discr_data(filename="mantis_discrimination.csv", mix)
-plot_data(filename="Fig1b_isospace_seagrass", plot_save_pdf=TRUE, plot_save_png=FALSE, mix,source,discr)
+plot_data(filename="Fig2b_isospace_seagrass", plot_save_pdf=TRUE, plot_save_png=FALSE, mix,source,discr)
 

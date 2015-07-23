@@ -1,5 +1,5 @@
 # Mantis shrimp
-# Figure 2
+# Figure 3
 # Boxplots by habitat
 # 4.16.15
 setwd("/home/brian/Documents/Isotopes/mantis_shrimp_diet")
@@ -30,7 +30,7 @@ coral <- post.coral %>% gather(source,value,2:7)
 all <- rbind(grass,coral)
 
 # Boxplot
-cairo_pdf("/home/brian/Documents/Isotopes/mantis_shrimp_diet/Fig2_diet_boxplot_hardprior.pdf")
+cairo_pdf("/home/brian/Documents/Isotopes/mantis_shrimp_diet/Fig3a_diet_boxplot_hardprior.pdf")
 plot.new()
 ggplot(aes(y = value, x = source, fill = habitat), data = all) + 
 	geom_boxplot(outlier.colour = NA) +
@@ -66,7 +66,7 @@ all <- rbind(grass,coral)
 setwd("/home/brian/Documents/Isotopes/mantis_shrimp_diet")
 
 # Boxplot
-cairo_pdf("/home/brian/Documents/Isotopes/mantis_shrimp_diet/Fig2_diet_boxplot_abundprior.pdf")
+cairo_pdf("/home/brian/Documents/Isotopes/mantis_shrimp_diet/Fig3b_diet_boxplot_abundprior.pdf")
 plot.new()
 ggplot(aes(y = value, x = source, fill = habitat), data = all) + 
 	geom_boxplot(outlier.colour = NA) +

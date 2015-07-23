@@ -1,6 +1,11 @@
 # Brian Stock
 # 4/15/15
-# Plot priors and posteriors for hard prior and abundance priors
+# Figure 4
+# Plot priors and posteriors for hard prior
+
+library(gplots)
+library(fields)
+library(compositions)
 
 alpha.hard <- c(1,1,4,4,1,4)
 n.sources <- length(alpha.hard)
@@ -11,47 +16,9 @@ alpha.unif <- rep(1,n.sources)
 alpha.abund.grass <- c(0.35,1.61,0.43,(51.65+0.26),5.18,40.5)*6/100
 alpha.abund.coral <- c((14.31+24.74),0.01,15.48,(13.81+4.71),8.44,18.51)*6/100
 
-# Plot prior distributions:
-#   1) generalist: uninformative (alpha.unif)
-#   2) generalist: prey abundance (alpha.abund.grass)
-#   3) generalist: prey abundance (alpha.abund.coral)
-#   4) specialist: hard-shell prey 4x likely (alpha.hard)
-library(gplots)
-library(fields)
-library(compositions)
-# p = rDirichlet.rcomp(10000, alpha = alpha.unif)
-# p1 = c(p[,1], seq(0,1,0.01))
-# p5 = c(p[,5], seq(0,1,0.01))
-# p4 = c(p[,4], seq(0,1,0.01))
-# p_jeff = rDirichlet.rcomp(10000, alpha = alpha.abund.grass)
-# p1_jeff = c(p_jeff[,1], seq(0,1,0.01))
-# p5_jeff = c(p_jeff[,5], seq(0,1,0.01))
-# p4_jeff = c(p_jeff[,4], seq(0,1,0.01))
-# pa = rDirichlet.rcomp(10000, alpha = alpha.abund.coral)
-# p1a = c(pa[,1], seq(0,1,0.01))
-# p5a = c(pa[,5], seq(0,1,0.01))
-# p4a = c(pa[,4], seq(0,1,0.01))
 pb = rDirichlet.rcomp(10000, alpha = alpha.hard)
-# p1b = c(pb[,1], seq(0,1,0.01))
-# p5b = c(pb[,5], seq(0,1,0.01))
-# p4b = c(pb[,4], seq(0,1,0.01))
-# par(mfrow = c(3,4), mgp = c(2,1,0),mai=c(0.5,0.5,0.4,0.1))
-# hist(p1, breaks = seq(0,1,length.out=40),col="darkgrey", main = "Source 1: Uniform",xlab=expression(p[1]),xlim=c(0,1))
-# hist(p1_jeff, breaks = seq(0,1,length.out=40),col="lightgrey", main = "Source 1: Seagrass abundance",xlab=expression(p[1]),xlim=c(0,1))
-# hist(p1a, breaks = seq(0,1,length.out=40),col="blue", main = "Source 1: Coral abundance",xlab=expression(p[1]),xlim=c(0,1))
-# hist(p1b, breaks = seq(0,1,length.out=40),col="red", main = "Source 1: Hard-shell",xlab=expression(p[1]),xlim=c(0,1))
-# hist(p5, breaks = seq(0,1,length.out=40),col="darkgrey", main = "Source 5: Uniform",xlab=expression(p[2]),xlim=c(0,1))
-# hist(p5_jeff, breaks = seq(0,1,length.out=40),col="lightgrey", main = "Source 5: Seagrass abundance",xlab=expression(p[1]),xlim=c(0,1))
-# hist(p5a, breaks = seq(0,1,length.out=40),col="blue", main = "Source 5: Coral abundance",xlab=expression(p[2]),xlim=c(0,1))
-# hist(p5b, breaks = seq(0,1,length.out=40),col="red", main = "Source 5: Hard-shell",xlab=expression(p[2]),xlim=c(0,1))
-# hist(p4, breaks = seq(0,1,length.out=40),col="darkgrey", main = "Source 4: Uniform",xlab=expression(p[4]),xlim=c(0,1))
-# hist(p4_jeff, breaks = seq(0,1,length.out=40),col="lightgrey", main = "Source 4: Seagrass abundance",xlab=expression(p[1]),xlim=c(0,1))
-# hist(p4a, breaks = seq(0,1,length.out=40),col="blue", main = "Source 4: Coral abundance",xlab=expression(p[4]),xlim=c(0,1))
-# hist(p4b, breaks = seq(0,1,length.out=40),col="red", main = "Source 4: Hard-shell",xlab=expression(p[4]),xlim=c(0,1))
 
 setwd("/home/brian/Documents/Isotopes/mantis_shrimp_diet")
-# dev.copy(png,"priors.png", width=980, height=683)
-# dev.off()
 
 # Make hard/soft aggregated prior/posterior figure
 library(tidyr)
@@ -86,6 +53,27 @@ library(R2jags)
 attach.jags(jags.1)
 post.grass <- data.frame(hard = p.fac1[,1,3]+p.fac1[,1,4]+p.fac1[,1,6], soft = p.fac1[,1,1]+p.fac1[,1,2]+p.fac1[,1,5])
 post.coral <- data.frame(hard = p.fac1[,2,3]+p.fac1[,2,4]+p.fac1[,2,6], soft = p.fac1[,2,1]+p.fac1[,2,2]+p.fac1[,2,5])
+
+# Get median +/- 95% CI proportions for hard vs. soft
+print_CI <- function(vec){
+	med <- median(vec)
+	low <- quantile(vec,.025)
+	high <- quantile(vec,.975)
+	return(round(c(low,med,high),3))
+}
+apply(post.coral,2,print_CI)
+apply(post.grass,2,print_CI)
+
+# Calculate specialization index (Newsome et al. 2012), hard vs. soft
+n.sources <- 2
+gam <<- rep(1/n.sources,n.sources)
+phi <<- rep(0,n.sources)
+phi[1] <- 1
+calc_eps <- function(f)	sqrt(sum((f-gam)^2))/sqrt(sum((phi-gam)^2))
+eps.grass <- apply(post.grass,1,calc_eps)
+eps.coral <- apply(post.coral,1,calc_eps)
+eps.prior <- apply(prior,1,calc_eps)
+
 post.grass.df <- post.grass %>% gather(variable,value,1:2)
 post.coral.df <- post.coral %>% gather(variable,value,1:2)
 
@@ -132,7 +120,7 @@ mylegend<-g_legend(prior.plot)
 
 prior.plot <- prior.plot + theme(legend.position="none")
 p3 <- grid.arrange(prior.plot, post.grass.plot, post.coral.plot, mylegend,ncol=1,nrow=4,heights=c(3.1,3.1,3.1,0.7))
-dev.copy(pdf,"/home/brian/Documents/Isotopes/mantis_shrimp_diet/Fig3_prior_posteriors_hard_color.pdf")
+dev.copy(pdf,"/home/brian/Documents/Isotopes/mantis_shrimp_diet/Fig4_prior_posteriors_hard_color.pdf")
 dev.off()
 
 # --------------------------------------------------------------------------------
@@ -198,5 +186,5 @@ mylegend<-g_legend(prior.plot)
 
 prior.plot <- prior.plot + theme(legend.position="none")
 p3 <- grid.arrange(prior.plot, post.grass.plot, post.coral.plot, mylegend,ncol=1,nrow=4,heights=c(3.1,3.1,3.1,0.7))
-dev.copy(pdf,"/home/brian/Documents/Isotopes/mantis_shrimp_diet/Fig3_prior_posteriors_hard_bw.pdf")
+dev.copy(pdf,"/home/brian/Documents/Isotopes/mantis_shrimp_diet/Fig4_prior_posteriors_hard_bw.pdf")
 dev.off()
