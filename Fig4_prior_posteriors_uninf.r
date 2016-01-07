@@ -1,22 +1,23 @@
 # Brian Stock
-# 4/15/15
+# 1/7/16
 # Figure 4
-# Plot priors and posteriors for hard prior
+# Plot priors and posteriors for uninformative prior
 
 library(gplots)
 library(fields)
 library(compositions)
 
-alpha.hard <- c(1,1,4,4,1,4)
-n.sources <- length(alpha.hard)
-alpha.hard <- alpha.hard*n.sources/sum(alpha.hard)
+# alpha.hard <- c(1,1,4,4,1,4)
+# n.sources <- length(alpha.hard)
+# alpha.hard <- alpha.hard*n.sources/sum(alpha.hard)
 
+n.sources <- 6
 alpha.unif <- rep(1,n.sources)
 
-alpha.abund.grass <- c(0.35,1.61,0.43,(51.65+0.26),5.18,40.5)*6/100
-alpha.abund.coral <- c((14.31+24.74),0.01,15.48,(13.81+4.71),8.44,18.51)*6/100
+# alpha.abund.grass <- c(0.35,1.61,0.43,(51.65+0.26),5.18,40.5)*6/100
+# alpha.abund.coral <- c((14.31+24.74),0.01,15.48,(13.81+4.71),8.44,18.51)*6/100
 
-pb = rDirichlet.rcomp(10000, alpha = alpha.hard)
+pb = rDirichlet.rcomp(10000, alpha = alpha.unif)
 
 setwd("/home/brian/Documents/Isotopes/mantis_shrimp_diet")
 
@@ -46,8 +47,8 @@ prior.plot <- ggplot(data=prior.df, aes(x=value, fill=as.factor(variable), colou
 
 prior.plot <- prior.plot + theme(legend.position="bottom", legend.text = element_text(size = 16))
 
-# Get posteriors from best fit model #10 (hardprior, hab, mixsir, sources by habitat, conc dep)
-setwd("/home/brian/Documents/Isotopes/mantis_shrimp_diet/10_habitat_sourcebyhab_mixsir_conc")
+# Get posteriors from Model #15: uninformative prior, hab, mixsir, sources by habitat, conc dep
+setwd("/home/brian/Documents/Isotopes/mantis_shrimp_diet/15_uninf_prior")
 load("finished.RData")
 library(R2jags)
 attach.jags(jags.1)
@@ -120,7 +121,7 @@ mylegend<-g_legend(prior.plot)
 
 prior.plot <- prior.plot + theme(legend.position="none")
 p3 <- grid.arrange(prior.plot, post.grass.plot, post.coral.plot, mylegend,ncol=1,nrow=4,heights=c(3.1,3.1,3.1,0.7))
-dev.copy(pdf,"/home/brian/Documents/Isotopes/mantis_shrimp_diet/Fig4_prior_posteriors_hard_color.pdf")
+dev.copy(pdf,"/home/brian/Documents/Isotopes/mantis_shrimp_diet/Fig4_prior_posteriors_uninf_color.pdf")
 dev.off()
 
 # --------------------------------------------------------------------------------
@@ -186,7 +187,7 @@ mylegend<-g_legend(prior.plot)
 
 prior.plot <- prior.plot + theme(legend.position="none")
 p3 <- grid.arrange(prior.plot, post.grass.plot, post.coral.plot, mylegend,ncol=1,nrow=4,heights=c(3.1,3.1,3.1,0.7))
-dev.copy(pdf,"/home/brian/Documents/Isotopes/mantis_shrimp_diet/Fig4_prior_posteriors_hard_bw.pdf")
+dev.copy(pdf,"/home/brian/Documents/Isotopes/mantis_shrimp_diet/Fig4_prior_posteriors_uninf_bw.pdf")
 dev.off()
 
 # -------------------------------------------------------------------------------
@@ -214,5 +215,5 @@ table3[5,4:6] <- t(apply(post.coral,2,print_CI)[,1]) # Coral hard agg
 table3[6,4:6] <- print_CI(p.fac1[,2,3]) # Coral Clam
 table3[7,4:6] <- print_CI(p.fac1[,2,4]) # Coral Crab
 table3[8,4:6] <- print_CI(p.fac1[,2,6]) # Coral Snail
-write.csv(table3, file = "/home/brian/Documents/Isotopes/mantis_shrimp_diet/Table3.csv", row.names = TRUE)
-
+write.csv(table3, file = "/home/brian/Documents/Isotopes/mantis_shrimp_diet/Table3_uninf.csv", row.names = TRUE)
+table3

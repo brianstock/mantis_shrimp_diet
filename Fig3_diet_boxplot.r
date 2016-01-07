@@ -1,7 +1,7 @@
 # Mantis shrimp
 # Figure 3
-# Boxplots by habitat
-# 4.16.15
+# Boxplots by habitat - uninformative prior
+# 1.7.15
 setwd("/home/brian/Documents/Isotopes/mantis_shrimp_diet")
 
 # Load packages
@@ -18,7 +18,7 @@ require(grid)
 # Diet boxplot for results in one folder only (hard & uninformative priors)
 # ------------------------------------------------------------------
 # Load data
-setwd("/home/brian/Documents/Isotopes/mantis_shrimp_diet/10_habitat_sourcebyhab_mixsir_conc")
+setwd("/home/brian/Documents/Isotopes/mantis_shrimp_diet/15_uninf_prior")
 load("finished.RData")
 
 # Get posterior chains into one tidy data frame
