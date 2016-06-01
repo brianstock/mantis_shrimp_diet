@@ -41,7 +41,8 @@ prior.plot <- ggplot(data=prior.df, aes(x=value, fill=as.factor(variable), colou
 				theme_bw() +
 				xlab("Diet proportion") +
 				ylab("Prior density") +
-				coord_cartesian(xlim = c(0,1)) +
+				coord_cartesian(xlim = c(0,1), ylim=c(0,3.5),expand=FALSE) +
+				# xlim(0,1) +
 				labs(title = "Aggregated prior density")
 
 prior.plot <- prior.plot + theme(legend.position="bottom", legend.text = element_text(size = 16))
@@ -83,7 +84,7 @@ post.grass.plot <- ggplot(data=post.grass.df, aes(x=value, fill=as.factor(variab
 					theme_bw() +
 					xlab("Diet proportion") +
 				    ylab("Posterior density") +
-				    coord_cartesian(xlim = c(0,1)) +
+				    coord_cartesian(xlim = c(0,1), ylim=c(0,6.1),expand=FALSE) +
 				    labs(title = "Aggregated posterior density: Seagrass") +
 				    theme(legend.position="none")
 
@@ -93,7 +94,7 @@ post.coral.plot <- ggplot(data=post.coral.df, aes(x=value, fill=as.factor(variab
 					theme_bw() +
 					xlab("Diet proportion") +
 				    ylab("Posterior density") +
-				    coord_cartesian(xlim = c(0,1)) +
+				    coord_cartesian(xlim = c(0,1), ylim=c(0,6.5),expand=FALSE) +
 				    labs(title = "Aggregated posterior density: Coral") +
 				    theme(legend.position="none")
 
@@ -138,14 +139,14 @@ prior.plot <- ggplot(data=prior.df, aes(x=value, fill=as.factor(variable), colou
                          labels=c(" Hard-shelled          ", " Soft-bodied")) +
 				# scale_fill_grey(start = 0.2, end = .6) +
 				# scale_colour_grey(start = 0.2, end = .6) +
-				theme(legend.key.width=unit(8,"line")) +
-				theme_bw() +
+				coord_cartesian(xlim = c(0,1), ylim=c(0,3.5),expand=FALSE) +
+				theme_bw() +				
+				theme(legend.key.width=unit(4,"line"),legend.position="bottom", legend.text = element_text(size = 16),panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
 				xlab("Diet proportion") +
 				ylab("Prior density") +
-				coord_cartesian(xlim = c(0,1)) +
 				labs(title = "Aggregated prior density")
 
-prior.plot <- prior.plot + theme(legend.position="bottom", legend.text = element_text(size = 16))
+# prior.plot <- prior.plot + theme(legend.position="bottom", legend.text = element_text(size = 16))
 
 post.grass.plot <- ggplot(data=post.grass.df, aes(x=value, fill=as.factor(variable), colour=as.factor(variable))) +
 					geom_density(alpha=.3) +
@@ -155,9 +156,9 @@ post.grass.plot <- ggplot(data=post.grass.df, aes(x=value, fill=as.factor(variab
 					theme_bw() +
 					xlab("Diet proportion") +
 				    ylab("Posterior density") +
-				    coord_cartesian(xlim = c(0,1)) +
+				    coord_cartesian(xlim = c(0,1), ylim=c(0,6.1),expand=FALSE) +
 				    labs(title = "Aggregated posterior density: Seagrass") +
-				    theme(legend.position="none")
+				    theme(legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
 post.coral.plot <- ggplot(data=post.coral.df, aes(x=value, fill=as.factor(variable), colour=as.factor(variable))) +
 					geom_density(alpha=.3) +
@@ -167,9 +168,9 @@ post.coral.plot <- ggplot(data=post.coral.df, aes(x=value, fill=as.factor(variab
 					theme_bw() +
 					xlab("Diet proportion") +
 				    ylab("Posterior density") +
-				    coord_cartesian(xlim = c(0,1)) +
+				    coord_cartesian(xlim = c(0,1), ylim=c(0,6.5),expand=FALSE) +
 				    labs(title = "Aggregated posterior density: Coral") +
-				    theme(legend.position="none")
+				    theme(legend.position="none",panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
 # Plot all 3 together
 library(gridExtra)
